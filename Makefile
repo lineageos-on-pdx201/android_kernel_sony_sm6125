@@ -383,25 +383,24 @@ endif
 # Make variables (CC, etc...)
 CPP		= $(CC) -E
 ifneq ($(LLVM),)
-CC		= clang
+REAL_CC		= clang
 LD		= ld.lld
 AR		= llvm-ar
 NM		= llvm-nm
-OBJCOPY	= llvm-objcopy
-OBJDUMP	= llvm-objdump
-READELF	= llvm-readelf
-OBJSIZE	= llvm-size
+OBJCOPY		= llvm-objcopy
+OBJDUMP		= llvm-objdump
+READELF		= llvm-readelf
 STRIP		= llvm-strip
 else
-LD		= $(CROSS_COMPILE)ld
 REAL_CC		= $(CROSS_COMPILE)gcc
+LD		= $(CROSS_COMPILE)ld
 LDGOLD		= $(CROSS_COMPILE)ld.gold
 AR		= $(CROSS_COMPILE)ar
 NM		= $(CROSS_COMPILE)nm
-STRIP		= $(CROSS_COMPILE)strip
 OBJCOPY		= $(CROSS_COMPILE)objcopy
 OBJDUMP		= $(CROSS_COMPILE)objdump
 READELF		= $(CROSS_COMPILE)readelf
+STRIP		= $(CROSS_COMPILE)strip
 endif
 AWK		= awk
 GENKSYMS	= scripts/genksyms/genksyms
