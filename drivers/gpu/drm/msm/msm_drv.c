@@ -16,6 +16,11 @@
  * this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 /*
+ * NOTE: This file has been modified by Sony Corporation.
+ * Modifications are Copyright 2019 Sony Corporation,
+ * and licensed under the license of the file.
+ */
+/*
  * Copyright (c) 2016 Intel Corporation
  *
  * Permission to use, copy, modify, distribute, and sell this software and its
@@ -49,7 +54,10 @@
 #include "msm_kms.h"
 #include "sde_wb.h"
 #include "sde_dbg.h"
-#include <drm/drm_client.h>
+
+#ifdef CONFIG_DRM_SDE_SPECIFIC_PANEL
+#include "dsi-staging/dsi_panel_driver.h"
+#endif /* CONFIG_DRM_SDE_SPECIFIC_PANEL */
 
 /*
  * MSM driver version:
@@ -312,7 +320,6 @@ static int msm_drm_uninit(struct device *dev)
 	drm_mode_config_cleanup(ddev);
 
 	if (priv->registered) {
-		drm_client_dev_unregister(ddev);
 		drm_dev_unregister(ddev);
 		priv->registered = false;
 	}
@@ -772,6 +779,10 @@ static int msm_drm_init(struct device *dev, struct drm_driver *drv)
 
 	drm_kms_helper_poll_init(ddev);
 	place_marker("M - DISPLAY Driver Ready");
+
+#ifdef CONFIG_DRM_SDE_SPECIFIC_PANEL
+	incell_driver_init(priv);
+#endif /* CONFIG_DRM_SDE_SPECIFIC_PANEL */
 
 	return 0;
 

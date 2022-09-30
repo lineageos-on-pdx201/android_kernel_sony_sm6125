@@ -1222,6 +1222,7 @@ static struct nf_conntrack_helper nf_conntrack_helper_q931[] __read_mostly = {
 	},
 	{
 		.name			= "Q.931",
+		.data_len		= sizeof(struct nf_ct_h323_master),
 		.me			= THIS_MODULE,
 		.data_len		= sizeof(struct nf_ct_h323_master),
 		.tuple.src.l3num	= AF_INET6,

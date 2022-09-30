@@ -11,6 +11,11 @@
  * GNU General Public License for more details.
  *
  */
+/*
+ * NOTE: This file has been modified by Sony Corporation.
+ * Modifications are Copyright 2021 Sony Corporation,
+ * and licensed under the license of the file.
+ */
 #include <linux/dma-buf.h>
 #include <linux/dma-mapping.h>
 #include <linux/slab.h>
@@ -3598,7 +3603,6 @@ static int fastrpc_set_process_info(struct fastrpc_file *fl)
 
 	memcpy(cur_comm, current->comm, TASK_COMM_LEN);
 	cur_comm[TASK_COMM_LEN-1] = '\0';
-
 	fl->tgid = current->tgid;
 	snprintf(strpid, PID_SIZE, "%d", current->pid);
 	if (debugfs_root) {

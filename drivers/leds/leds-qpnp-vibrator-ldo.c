@@ -9,6 +9,11 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
+/*
+ * NOTE: This file has been modified by Sony Corporation.
+ * Modifications are Copyright 2020 Sony Corporation,
+ * and licensed under the license of the file.
+ */
 
 #define pr_fmt(fmt)	"%s: " fmt, __func__
 
@@ -41,7 +46,7 @@
  * Define vibration periods: default(5sec), min(50ms), max(15sec) and
  * overdrive(30ms).
  */
-#define QPNP_VIB_MIN_PLAY_MS		50
+#define QPNP_VIB_MIN_PLAY_MS		10
 #define QPNP_VIB_PLAY_MS		5000
 #define QPNP_VIB_MAX_PLAY_MS		15000
 #define QPNP_VIB_OVERDRIVE_PLAY_MS	30

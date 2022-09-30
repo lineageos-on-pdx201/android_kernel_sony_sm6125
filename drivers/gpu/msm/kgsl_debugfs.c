@@ -10,6 +10,11 @@
  * GNU General Public License for more details.
  *
  */
+/*
+ * NOTE: This file has been modified by Sony Corporation.
+ * Modifications are Copyright 2021 Sony Corporation,
+ * and licensed under the license of the file.
+ */
 
 #include <linux/module.h>
 #include <linux/debugfs.h>
@@ -167,9 +172,9 @@ static int print_mem_entry(void *data, void *ptr)
 		kgsl_get_egl_counts(entry, &egl_surface_count,
 						&egl_image_count);
 
-	seq_printf(s, "%pK %pK %16llu %5d %9s %10s %16s %5d %16d %6d %6d",
+        seq_printf(s, "%pK %pK %16llu %5d %9s %10s %16s %5d %16d %6d %6d",
 			(uint64_t *)(uintptr_t) m->gpuaddr,
-			/*
+                        /*
 			 * Show zero for the useraddr - we can't reliably track
 			 * that value for multiple vmas anyway
 			 */

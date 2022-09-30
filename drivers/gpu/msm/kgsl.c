@@ -10,6 +10,11 @@
  * GNU General Public License for more details.
  *
  */
+/*
+ * NOTE: This file has been modified by Sony Corporation.
+ * Modifications are Copyright 2021 Sony Corporation,
+ * and licensed under the license of the file.
+ */
 #include <linux/module.h>
 #include <linux/fb.h>
 #include <linux/file.h>
@@ -282,6 +287,7 @@ kgsl_mem_entry_create(void)
 		atomic_set(&entry->map_count, 0);
 	}
 
+        atomic_set(&entry->map_count, 0);
 	return entry;
 }
 
@@ -531,6 +537,7 @@ static void kgsl_mem_entry_detach_process(struct kgsl_mem_entry *entry)
 	if (entry->id != 0)
 		idr_remove(&entry->priv->mem_idr, entry->id);
 	entry->id = 0;
+
 
 	spin_unlock(&entry->priv->mem_lock);
 
@@ -2306,10 +2313,10 @@ static int check_vma_flags(struct vm_area_struct *vma,
 
 static int check_vma(unsigned long hostptr, u64 size)
 {
-	struct vm_area_struct *vma;
-	unsigned long cur = hostptr;
 
-	while (cur < (hostptr + size)) {
+        struct vm_area_struct *vma;
+	unsigned long cur = hostptr;
+        while (cur < (hostptr + size)) {
 		vma = find_vma(current->mm, cur);
 		if (!vma)
 			return false;
@@ -2353,10 +2360,9 @@ static int memdesc_sg_virt(struct kgsl_memdesc *memdesc, unsigned long useraddr)
 		goto out;
 	}
 
-	npages = get_user_pages(useraddr, sglen, write, pages, NULL);
+        npages = get_user_pages(useraddr, sglen, write, pages, NULL);
 	up_read(&current->mm->mmap_sem);
-
-	ret = (npages < 0) ? (int)npages : 0;
+        ret = (npages < 0) ? (int)npages : 0;
 	if (ret)
 		goto out;
 
@@ -2400,17 +2406,18 @@ static int kgsl_setup_anon_useraddr(struct kgsl_pagetable *pagetable,
 	entry->memdesc.ops = &kgsl_usermem_ops;
 
 	if (kgsl_memdesc_use_cpu_map(&entry->memdesc)) {
+
 		/* Register the address in the database */
 		ret = kgsl_mmu_set_svm_region(pagetable,
-			(uint64_t) hostptr, (uint64_t) size);
+                      (uint64_t) hostptr, (uint64_t) size);
 
 		if (ret)
 			return ret;
 
-		entry->memdesc.gpuaddr = (uint64_t) hostptr;
+         entry->memdesc.gpuaddr = (uint64_t) hostptr;
 	}
 
-	ret = memdesc_sg_virt(&entry->memdesc, hostptr);
+        ret = memdesc_sg_virt(&entry->memdesc, hostptr);
 
 	if (ret && kgsl_memdesc_use_cpu_map(&entry->memdesc))
 		kgsl_mmu_put_gpuaddr(&entry->memdesc);
@@ -2500,7 +2507,7 @@ static int kgsl_setup_dmabuf_useraddr(struct kgsl_device *device,
 		return ret;
 	}
 
-	/* Setup the cache mode for cache operations */
+       /* Setup the cache mode for cache operations */
 	_setup_cache_mode(entry, vma);
 	up_read(&current->mm->mmap_sem);
 	return 0;
@@ -3514,7 +3521,8 @@ long kgsl_ioctl_gpumem_get_info(struct kgsl_device_private *dev_priv,
 	param->flags = (unsigned int) entry->memdesc.flags;
 	param->size = (size_t) entry->memdesc.size;
 	param->mmapsize = (size_t) kgsl_memdesc_footprint(&entry->memdesc);
-	/*
+
+        /*
 	 * Entries can have multiple user mappings so thre isn't any one address
 	 * we can report. Plus, the user should already know their mappings, so
 	 * there isn't any value in reporting it back to them.
@@ -4386,6 +4394,7 @@ static void kgsl_gpumem_vm_open(struct vm_area_struct *vma)
 		vma->vm_private_data = NULL;
 
 	atomic_inc(&entry->map_count);
+
 }
 
 static int
@@ -4580,6 +4589,15 @@ static unsigned long _search_range(struct kgsl_process_private *private,
 		if (!IS_ERR_VALUE(result))
 			break;
 		/*
+		 * _gpu_set_svm_region will return -EBUSY if we tried to set up
+		 * SVM on an object that already has a GPU address. If
+		 * that happens don't bother walking the rest of the
+		 * region
+		 */
+		if ((long) result == -EBUSY)
+			return -EBUSY;
+
+                 /*
 		 * _gpu_set_svm_region will return -EBUSY if we tried to set up
 		 * SVM on an object that already has a GPU address. If
 		 * that happens don't bother walking the rest of the
@@ -4812,11 +4830,11 @@ static int kgsl_mmap(struct file *file, struct vm_area_struct *vma)
 
 	vma->vm_file = file;
 
-	if (atomic_inc_return(&entry->map_count) == 1)
+        if (atomic_inc_return(&entry->map_count) == 1)
 		atomic64_add(entry->memdesc.size,
 				&entry->priv->gpumem_mapped);
 
-	trace_kgsl_mem_mmap(entry, vma->vm_start);
+        trace_kgsl_mem_mmap(entry, vma->vm_start);
 	return 0;
 }
 

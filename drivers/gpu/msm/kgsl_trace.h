@@ -10,6 +10,11 @@
  * GNU General Public License for more details.
  *
  */
+/*
+ * NOTE: This file has been modified by Sony Corporation.
+ * Modifications are Copyright 2021 Sony Corporation,
+ * and licensed under the license of the file.
+ */
 
 #if !defined(_KGSL_TRACE_H) || defined(TRACE_HEADER_MULTI_READ)
 #define _KGSL_TRACE_H
