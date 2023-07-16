@@ -1120,8 +1120,6 @@ config SERIAL_MSM_GENI
 config SERIAL_MSM_GENI_CONSOLE
 	tristate "MSM on-chip GENI HW based console support"
 	depends on SERIAL_MSM_GENI=y
-	select SERIAL_CORE_CONSOLE
-	select SERIAL_EARLYCON
 
 config SERIAL_MSM_HS
 	tristate "MSM UART High Speed: Serial Driver"
