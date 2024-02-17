@@ -7579,7 +7579,7 @@ static int cirrus_init(struct snd_soc_pcm_runtime *rtd)
 {
 	int i;
 	struct snd_soc_dai **codec_dais = rtd->codec_dais;
-	struct snd_soc_dapm_context *dapm;
+	struct snd_soc_dapm_context *dapm = { 0 };
 
 	for (i = 0; i < rtd->num_codecs; i++) {
 		dapm = snd_soc_codec_get_dapm(codec_dais[i]->codec);
